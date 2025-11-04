@@ -15,12 +15,12 @@ def main():
     print(f"UUID 1: {uuid1}")
     print(f"UUID 2: {uuid2}")
     print(f"Is unique? {uuid1 != uuid2}")
-    print(f"Version: {example_uuid.version}")
     print()
     
     # UUID formats
     print("UUID Formats:")
     example_uuid = uuid.uuid4()
+    print(f"Version: {example_uuid.version}")
     print(f"String: {str(example_uuid)}")
     print(f"Hex: {example_uuid.hex}")
     print(f"Int: {example_uuid.int}")
@@ -34,6 +34,14 @@ def main():
     print(f"Original: {example_uuid}")
     print(f"From string: {uuid_from_string}")
     print(f"Are equal: {example_uuid == uuid_from_string}")
+    print()
+    
+    # UUID1 - Based on MAC address and timestamp
+    print("UUID1 - MAC address and timestamp based:")
+    uuid1_example = uuid.uuid1()
+    print(f"UUID1: {uuid1_example}")
+    print(f"Version: {uuid1_example.version}")
+    print(f"Timestamp: {uuid1_example.time}")
 
 
 if __name__ == "__main__":
