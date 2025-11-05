@@ -42,6 +42,21 @@ def main():
     print(f"UUID1: {uuid1_example}")
     print(f"Version: {uuid1_example.version}")
     print(f"Timestamp: {uuid1_example.time}")
+    print()
+    
+    # UUID3 and UUID5 - Name-based (deterministic)
+    print("UUID3 and UUID5 - Name-based (deterministic):")
+    namespace = uuid.NAMESPACE_DNS
+    name = "example.com"
+    
+    uuid3_1 = uuid.uuid3(namespace, name)
+    uuid3_2 = uuid.uuid3(namespace, name)
+    print(f"UUID3 (MD5): {uuid3_1}")
+    print(f"UUID3 again: {uuid3_2}")
+    print(f"Same name = same UUID: {uuid3_1 == uuid3_2}")
+    
+    uuid5_example = uuid.uuid5(namespace, name)
+    print(f"UUID5 (SHA-1): {uuid5_example}")
 
 
 if __name__ == "__main__":
