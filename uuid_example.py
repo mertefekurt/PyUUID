@@ -57,6 +57,18 @@ def main():
     
     uuid5_example = uuid.uuid5(namespace, name)
     print(f"UUID5 (SHA-1): {uuid5_example}")
+    print()
+    
+    # Practical usage examples
+    print("Practical Usage Examples:")
+    user_id = uuid.uuid4()
+    print(f"User ID: {user_id}")
+    
+    filename = f"file_{uuid.uuid4().hex[:8]}.txt"
+    print(f"Generated filename: {filename}")
+    
+    session_token = uuid.uuid4().hex
+    print(f"Session token: {session_token}")
 
 
 if __name__ == "__main__":
