@@ -19,6 +19,10 @@ def main():
     print(f"A == B: {uuid_a == uuid_b}")
     print(f"A == C: {uuid_a == uuid_c}")
     print(f"A != B: {uuid_a != uuid_b}")
+    
+    uuid_from_hex = uuid.UUID(uuid_a.hex)
+    print(f"UUID from hex: {uuid_from_hex}")
+    print(f"A == hex UUID: {uuid_a == uuid_from_hex}")
 
 
 if __name__ == "__main__":
