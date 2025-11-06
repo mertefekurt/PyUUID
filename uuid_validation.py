@@ -40,6 +40,20 @@ def main():
     test_uuid = uuid.uuid4()
     print(f"UUID: {test_uuid}")
     print(f"Version: {test_uuid.version}")
+    
+    print("\nValidate multiple formats:")
+    formats = [
+        str(test_uuid),
+        test_uuid.hex,
+        str(test_uuid.int)
+    ]
+    for fmt in formats:
+        try:
+            uuid_obj = uuid.UUID(fmt) if fmt != str(test_uuid.int) else None
+            if uuid_obj:
+                print(f"  {fmt[:30]}...: Valid")
+        except:
+            print(f"  {fmt[:30]}...: Invalid")
 
 
 if __name__ == "__main__":
