@@ -35,6 +35,11 @@ def main():
     print("\nInvalid UUIDs:")
     for u in invalid_uuids:
         print(f"  {u}: {is_valid_uuid(u)}")
+    
+    print("\nUUID Version Check:")
+    test_uuid = uuid.uuid4()
+    print(f"UUID: {test_uuid}")
+    print(f"Version: {test_uuid.version}")
 
 
 if __name__ == "__main__":
