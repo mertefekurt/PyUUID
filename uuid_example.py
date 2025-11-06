@@ -69,6 +69,11 @@ def main():
     
     session_token = uuid.uuid4().hex
     print(f"Session token: {session_token}")
+    print()
+    
+    print("UUID Variant:")
+    test_uuid = uuid.uuid4()
+    print(f"Variant: {test_uuid.variant}")
 
 
 if __name__ == "__main__":
