@@ -17,6 +17,11 @@ def generate_filename(extension="txt"):
     return f"file_{uuid.uuid4().hex[:8]}.{extension}"
 
 
+def generate_short_id(length=8):
+
+    return uuid.uuid4().hex[:length]
+
+
 if __name__ == "__main__":
     print("UUID Utils")
     print("-" * 40)
