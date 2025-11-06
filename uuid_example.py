@@ -74,6 +74,13 @@ def main():
     print("UUID Variant:")
     test_uuid = uuid.uuid4()
     print(f"Variant: {test_uuid.variant}")
+    print()
+    
+    print("Create UUID from hex:")
+    hex_value = uuid.uuid4().hex
+    uuid_from_hex = uuid.UUID(hex_value)
+    print(f"Hex: {hex_value}")
+    print(f"UUID: {uuid_from_hex}")
 
 
 if __name__ == "__main__":
