@@ -15,13 +15,11 @@ def main():
     print("UUID Validation")
     print("-" * 40)
     
-
     valid_uuids = [
         str(uuid.uuid4()),
         "550e8400-e29b-41d4-a716-446655440000"
     ]
     
-
     invalid_uuids = [
         "not-a-uuid",
         "12345",

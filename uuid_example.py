@@ -1,8 +1,3 @@
-"""
-Python UUID examples
-UUID (Universally Unique Identifier) 
-"""
-
 import uuid
 
 
@@ -17,7 +12,6 @@ def main():
     print(f"Is unique? {uuid1 != uuid2}")
     print()
     
-    # UUID formats
     print("UUID Formats:")
     example_uuid = uuid.uuid4()
     print(f"Version: {example_uuid.version}")
@@ -27,7 +21,6 @@ def main():
     print(f"Bytes: {example_uuid.bytes}")
     print()
     
-    # Create UUID from string
     print("Create UUID from string:")
     uuid_string = str(example_uuid)
     uuid_from_string = uuid.UUID(uuid_string)
@@ -36,7 +29,6 @@ def main():
     print(f"Are equal: {example_uuid == uuid_from_string}")
     print()
     
-    # UUID1 - Based on MAC address and timestamp
     print("UUID1 - MAC address and timestamp based:")
     uuid1_example = uuid.uuid1()
     print(f"UUID1: {uuid1_example}")
@@ -44,7 +36,6 @@ def main():
     print(f"Timestamp: {uuid1_example.time}")
     print()
     
-    # UUID3 and UUID5 - Name-based (deterministic)
     print("UUID3 and UUID5 - Name-based (deterministic):")
     namespace = uuid.NAMESPACE_DNS
     name = "example.com"
@@ -59,7 +50,6 @@ def main():
     print(f"UUID5 (SHA-1): {uuid5_example}")
     print()
     
-    # Practical usage examples
     print("Practical Usage Examples:")
     user_id = uuid.uuid4()
     print(f"User ID: {user_id}")
