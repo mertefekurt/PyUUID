@@ -52,6 +52,12 @@ def main():
                 print(f"  {fmt[:30]}...: Valid")
         except:
             print(f"  {fmt[:30]}...: Invalid")
+    
+    print("\nVariant validation:")
+    uuid4_test = uuid.uuid4()
+    print(f"UUID4 variant: {uuid4_test.variant}")
+    uuid1_test = uuid.uuid1()
+    print(f"UUID1 variant: {uuid1_test.variant}")
 
 
 if __name__ == "__main__":
