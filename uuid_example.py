@@ -78,6 +78,13 @@ def main():
     uuid_from_int = uuid.UUID(int=int_value)
     print(f"Int: {int_value}")
     print(f"UUID: {uuid_from_int}")
+    print()
+    
+    print("UUID bytes conversion:")
+    bytes_value = uuid.uuid4().bytes
+    uuid_from_bytes = uuid.UUID(bytes=bytes_value)
+    print(f"Bytes: {bytes_value}")
+    print(f"UUID: {uuid_from_bytes}")
 
 
 if __name__ == "__main__":
