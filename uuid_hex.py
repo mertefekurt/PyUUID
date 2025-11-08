@@ -20,6 +20,14 @@ def main():
     
     print(f"\nFirst 8 chars: {test_uuid.hex[:8]}")
     print(f"Last 8 chars: {test_uuid.hex[-8:]}")
+    
+    print(f"\nHex segments:")
+    hex_val = test_uuid.hex
+    print(f"Segment 1: {hex_val[0:8]}")
+    print(f"Segment 2: {hex_val[8:12]}")
+    print(f"Segment 3: {hex_val[12:16]}")
+    print(f"Segment 4: {hex_val[16:20]}")
+    print(f"Segment 5: {hex_val[20:32]}")
 
 
 if __name__ == "__main__":
