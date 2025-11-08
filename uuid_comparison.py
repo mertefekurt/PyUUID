@@ -23,6 +23,11 @@ def main():
     uuid_from_hex = uuid.UUID(uuid_a.hex)
     print(f"UUID from hex: {uuid_from_hex}")
     print(f"A == hex UUID: {uuid_a == uuid_from_hex}")
+    
+    print("\nHash comparison:")
+    print(f"Hash A: {hash(uuid_a)}")
+    print(f"Hash C: {hash(uuid_c)}")
+    print(f"Hash equal: {hash(uuid_a) == hash(uuid_c)}")
 
 
 if __name__ == "__main__":
