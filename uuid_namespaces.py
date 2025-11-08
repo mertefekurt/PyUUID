@@ -29,6 +29,14 @@ def main():
     print(f"DNS namespace: {uuid5_dns_test}")
     print(f"URL namespace: {uuid5_url_test}")
     print(f"Different: {uuid5_dns_test != uuid5_url_test}")
+    
+    print("\nUsing NAMESPACE_OID:")
+    uuid5_oid = uuid.uuid5(uuid.NAMESPACE_OID, "1.2.3.4")
+    print(f"UUID5 for OID: {uuid5_oid}")
+    
+    print("\nUsing NAMESPACE_X500:")
+    uuid5_x500 = uuid.uuid5(uuid.NAMESPACE_X500, "CN=Test")
+    print(f"UUID5 for X500: {uuid5_x500}")
 
 
 if __name__ == "__main__":
