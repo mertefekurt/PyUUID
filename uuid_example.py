@@ -71,6 +71,13 @@ def main():
     uuid_from_hex = uuid.UUID(hex_value)
     print(f"Hex: {hex_value}")
     print(f"UUID: {uuid_from_hex}")
+    print()
+    
+    print("UUID from int:")
+    int_value = uuid.uuid4().int
+    uuid_from_int = uuid.UUID(int=int_value)
+    print(f"Int: {int_value}")
+    print(f"UUID: {uuid_from_int}")
 
 
 if __name__ == "__main__":
