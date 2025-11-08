@@ -26,6 +26,11 @@ def generate_transaction_id():
     return uuid.uuid4().hex.upper()
 
 
+def generate_api_key():
+
+    return uuid.uuid4().hex.replace('-', '')
+
+
 if __name__ == "__main__":
     print("UUID Utils")
     print("-" * 40)
