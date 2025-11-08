@@ -38,4 +38,6 @@ if __name__ == "__main__":
     print(f"Session Token: {generate_session_token()}")
     print(f"Filename: {generate_filename()}")
     print(f"Transaction ID: {generate_transaction_id()}")
+    print(f"API Key: {generate_api_key()}")
+    print(f"Short ID: {generate_short_id(12)}")
 
