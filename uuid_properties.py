@@ -30,6 +30,11 @@ def main():
     uuid5_test = uuid.uuid5(uuid.NAMESPACE_DNS, "test")
     print(f"UUID5: {uuid5_test}")
     print(f"Version: {uuid5_test.version}")
+    
+    print(f"\nBytes representation:")
+    print(f"Bytes: {test_uuid.bytes}")
+    print(f"Bytes hex: {test_uuid.bytes.hex()}")
+    print(f"Bytes length: {len(test_uuid.bytes)}")
 
 
 if __name__ == "__main__":
