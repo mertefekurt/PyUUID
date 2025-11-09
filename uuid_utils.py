@@ -19,6 +19,8 @@ def generate_session_token() -> str:
 
 
 def generate_filename(extension: str = "txt") -> str:
+    if not extension or not isinstance(extension, str):
+        raise ValueError("extension must be a non-empty string")
     return f"file_{uuid.uuid4().hex[:8]}.{extension}"
 
 
