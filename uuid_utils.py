@@ -3,6 +3,8 @@ from typing import Optional
 
 
 def is_valid_uuid(uuid_string: str) -> bool:
+    if not isinstance(uuid_string, str):
+        return False
     try:
         uuid.UUID(uuid_string)
         return True
