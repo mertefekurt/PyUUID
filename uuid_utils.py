@@ -50,12 +50,13 @@ def uuid_from_string(uuid_string: str) -> Optional[uuid.UUID]:
 
 
 if __name__ == "__main__":
+    test_uuid = generate_user_id()
     print("UUID Utils")
     print("-" * 40)
-    print(f"User ID: {generate_user_id()}")
+    print(f"User ID: {test_uuid}")
     print(f"Session Token: {generate_session_token()}")
     print(f"Filename: {generate_filename()}")
     print(f"Transaction ID: {generate_transaction_id()}")
     print(f"API Key: {generate_api_key()}")
     print(f"Short ID: {generate_short_id(12)}")
-    print(f"Valid UUID check: {is_valid_uuid(str(generate_user_id()))}")
+    print(f"Valid UUID check: {is_valid_uuid(str(test_uuid))}")
