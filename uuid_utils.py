@@ -41,6 +41,8 @@ def generate_api_key() -> str:
 
 
 def uuid_from_string(uuid_string: str) -> Optional[uuid.UUID]:
+    if not isinstance(uuid_string, str):
+        return None
     try:
         return uuid.UUID(uuid_string)
     except (ValueError, TypeError):
