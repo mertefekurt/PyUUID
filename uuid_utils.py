@@ -43,13 +43,6 @@ def uuid_from_string(uuid_string: str) -> Optional[uuid.UUID]:
         return None
 
 
-def uuid_from_hex(hex_string: str) -> Optional[uuid.UUID]:
-    try:
-        return uuid.UUID(hex_string)
-    except (ValueError, TypeError):
-        return None
-
-
 if __name__ == "__main__":
     print("UUID Utils")
     print("-" * 40)
