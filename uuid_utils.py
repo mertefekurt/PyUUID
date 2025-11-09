@@ -27,8 +27,8 @@ def generate_filename(extension: str = "txt") -> str:
 
 
 def generate_short_id(length: int = 8) -> str:
-    if length < 1 or length > 32:
-        raise ValueError("length must be between 1 and 32")
+    if not isinstance(length, int) or length < 1 or length > 32:
+        raise ValueError("length must be an integer between 1 and 32")
     return uuid.uuid4().hex[:length]
 
 
