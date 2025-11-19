@@ -37,6 +37,15 @@ class UUIDMigrator:
     def migrate_v4_to_v5(
         self, source_uuid: uuid.UUID, namespace: str, name: str
     ) -> MigrationResult:
+        if not isinstance(namespace, str) or not isinstance(name, str):
+            return MigrationResult(
+                source_uuid=source_uuid,
+                target_uuid=source_uuid,
+                migration_type="v4_to_v5",
+                success=False,
+                timestamp=datetime.now(),
+                metadata={"error": "namespace and name must be strings"},
+            )
         try:
             namespace_uuid = self.get_namespace(namespace)
             target_uuid = uuid.uuid5(namespace_uuid, name)
@@ -63,6 +72,15 @@ class UUIDMigrator:
     def migrate_v5_to_v3(
         self, source_uuid: uuid.UUID, namespace: str, name: str
     ) -> MigrationResult:
+        if not isinstance(namespace, str) or not isinstance(name, str):
+            return MigrationResult(
+                source_uuid=source_uuid,
+                target_uuid=source_uuid,
+                migration_type="v5_to_v3",
+                success=False,
+                timestamp=datetime.now(),
+                metadata={"error": "namespace and name must be strings"},
+            )
         try:
             namespace_uuid = self.get_namespace(namespace)
             target_uuid = uuid.uuid3(namespace_uuid, name)
