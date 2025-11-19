@@ -3,8 +3,6 @@ import time
 import statistics
 from typing import Dict, List, Callable
 from dataclasses import dataclass
-from contextlib import contextmanager
-from collections import defaultdict
 
 
 @dataclass
@@ -23,13 +21,6 @@ class BenchmarkResult:
 class UUIDBenchmark:
     def __init__(self):
         self.results: Dict[str, BenchmarkResult] = {}
-
-    @contextmanager
-    def timer(self):
-        start = time.perf_counter()
-        yield
-        end = time.perf_counter()
-        return end - start
 
     def measure_function(
         self, func: Callable, iterations: int = 10000, *args, **kwargs
