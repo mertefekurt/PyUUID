@@ -4,8 +4,6 @@ import time
 from typing import Optional, List, Dict
 from dataclasses import dataclass
 from queue import Queue, Empty
-from collections import deque
-import weakref
 
 
 @dataclass
@@ -65,7 +63,7 @@ class UUIDPool:
                 self.stats.total_generated += 1
                 self.stats.current_size = self.pool.qsize()
             return True
-        except:
+        except Exception:
             return False
 
     def _start_refill_thread(self):
@@ -161,7 +159,7 @@ class UUIDPool:
                     self.stats.current_size = self.pool.qsize()
                 return True
             return False
-        except:
+        except Exception:
             return False
 
     def get_stats(self) -> PoolStats:
