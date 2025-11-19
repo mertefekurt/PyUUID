@@ -1,5 +1,4 @@
 import uuid
-import hashlib
 from typing import Dict, List, Set, Tuple
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -39,10 +38,10 @@ class UUIDAnalyzer:
         bit_entropy = self._calculate_bit_entropy(uuid_obj)
 
         variant_map = {
-            "reserved_ncs": "reserved_ncs",
-            "rfc_4122": "rfc_4122",
-            "microsoft": "microsoft",
-            "reserved": "reserved",
+            uuid.RESERVED_NCS: "reserved_ncs",
+            uuid.RFC_4122: "rfc_4122",
+            uuid.RESERVED_MICROSOFT: "microsoft",
+            uuid.RESERVED_FUTURE: "reserved",
         }
         variant_str = variant_map.get(uuid_obj.variant, "unknown")
 
