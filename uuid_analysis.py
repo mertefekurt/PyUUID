@@ -27,6 +27,13 @@ class UUIDAnalysis:
 
 
 class UUIDAnalyzer:
+    _VARIANT_MAP = {
+        uuid.RESERVED_NCS: "reserved_ncs",
+        uuid.RFC_4122: "rfc_4122",
+        uuid.RESERVED_MICROSOFT: "microsoft",
+        uuid.RESERVED_FUTURE: "reserved",
+    }
+
     def __init__(self):
         self.analyzed_uuids: List[UUIDAnalysis] = []
         self.collision_tracker: Set[str] = set()
@@ -36,14 +43,7 @@ class UUIDAnalyzer:
         hex_dist = Counter(hex_str)
         bit_patterns = self._analyze_bit_patterns(uuid_obj)
         bit_entropy = self._calculate_bit_entropy(uuid_obj)
-
-        variant_map = {
-            uuid.RESERVED_NCS: "reserved_ncs",
-            uuid.RFC_4122: "rfc_4122",
-            uuid.RESERVED_MICROSOFT: "microsoft",
-            uuid.RESERVED_FUTURE: "reserved",
-        }
-        variant_str = variant_map.get(uuid_obj.variant, "unknown")
+        variant_str = self._VARIANT_MAP.get(uuid_obj.variant, "unknown")
 
         analysis = UUIDAnalysis(
             uuid_obj=uuid_obj,
