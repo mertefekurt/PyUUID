@@ -40,6 +40,13 @@ def generate_api_key() -> str:
     return uuid.uuid4().hex
 
 
+def generate_namespace_uuid(namespace: str, name: str) -> uuid.UUID:
+    if not isinstance(namespace, str) or not isinstance(name, str):
+        raise ValueError("namespace and name must be strings")
+    namespace_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, namespace)
+    return uuid.uuid5(namespace_uuid, name)
+
+
 def uuid_from_string(uuid_string: str) -> Optional[uuid.UUID]:
     if not isinstance(uuid_string, str):
         return None
