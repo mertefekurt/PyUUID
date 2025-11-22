@@ -62,6 +62,15 @@ def uuid_from_string(uuid_string: str) -> Optional[uuid.UUID]:
         return None
 
 
+def uuid_from_bytes(uuid_bytes: bytes) -> Optional[uuid.UUID]:
+    if not isinstance(uuid_bytes, bytes) or len(uuid_bytes) != 16:
+        return None
+    try:
+        return uuid.UUID(bytes=uuid_bytes)
+    except (ValueError, TypeError):
+        return None
+
+
 if __name__ == "__main__":
     test_uuid = generate_user_id()
     print("UUID Utils")
