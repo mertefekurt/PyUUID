@@ -36,6 +36,12 @@ def generate_transaction_id() -> str:
     return uuid.uuid4().hex.upper()
 
 
+def generate_secure_token(length: int = 32) -> str:
+    if not isinstance(length, int) or length < 16 or length > 64:
+        raise ValueError("length must be an integer between 16 and 64")
+    return uuid.uuid4().hex[:length]
+
+
 def generate_api_key() -> str:
     return uuid.uuid4().hex
 

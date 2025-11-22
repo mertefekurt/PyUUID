@@ -192,6 +192,9 @@ class UUIDAnalyzer:
 
         return "\n".join(report)
 
+    def clear_analysis(self):
+        self.analyzed_uuids.clear()
+
 
 if __name__ == "__main__":
     analyzer = UUIDAnalyzer()

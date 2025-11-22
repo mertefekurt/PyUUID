@@ -149,6 +149,9 @@ class UUIDBenchmark:
 
         return "\n".join(report)
 
+    def clear_results(self):
+        self.results.clear()
+
 
 if __name__ == "__main__":
     benchmark = UUIDBenchmark()

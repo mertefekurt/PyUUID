@@ -177,6 +177,10 @@ class UUIDPool:
                 eviction_count=self.stats.eviction_count,
             )
 
+    def get_hit_rate(self) -> float:
+        total_requests = self.stats.cache_hits + self.stats.cache_misses
+        return self.stats.cache_hits / total_requests if total_requests > 0 else 0.0
+
     def clear(self):
         while not self.pool.empty():
             try:
