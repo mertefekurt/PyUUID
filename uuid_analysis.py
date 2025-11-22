@@ -36,7 +36,6 @@ class UUIDAnalyzer:
 
     def __init__(self):
         self.analyzed_uuids: List[UUIDAnalysis] = []
-        self.collision_tracker: Set[str] = set()
 
     def analyze_uuid(self, uuid_obj: uuid.UUID) -> UUIDAnalysis:
         hex_str = uuid_obj.hex
