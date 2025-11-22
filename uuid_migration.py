@@ -155,6 +155,10 @@ class UUIDMigrator:
             return True
         return False
 
+    def clear_history(self):
+        self.migration_history.clear()
+        self.namespace_cache.clear()
+
 
 if __name__ == "__main__":
     migrator = UUIDMigrator()
