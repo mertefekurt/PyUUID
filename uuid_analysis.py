@@ -103,6 +103,8 @@ class UUIDAnalyzer:
         return entropy
 
     def analyze_distribution(self, uuids: List[uuid.UUID]) -> DistributionStats:
+        if not isinstance(uuids, list) or not uuids:
+            raise ValueError("uuids must be a non-empty list")
         unique_uuids = set()
         collisions = 0
         bit_distributions = defaultdict(list)
