@@ -25,6 +25,8 @@ class UUIDBenchmark:
     def measure_function(
         self, func: Callable, iterations: int = 10000, *args, **kwargs
     ) -> BenchmarkResult:
+        if not isinstance(iterations, int) or iterations < 1:
+            raise ValueError("iterations must be a positive integer")
         times = []
         for _ in range(iterations):
             start = time.perf_counter()
