@@ -141,6 +141,8 @@ class UUIDPool:
             return None
 
     def get_batch(self, count: int, timeout: Optional[float] = None) -> List[uuid.UUID]:
+        if not isinstance(count, int) or count < 1:
+            raise ValueError("count must be a positive integer")
         results = []
         for _ in range(count):
             uuid_obj = self.get(timeout=timeout)
