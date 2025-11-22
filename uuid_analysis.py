@@ -206,4 +206,5 @@ if __name__ == "__main__":
     print(f"\nDistribution Stats:")
     print(f"Unique: {stats.unique_count}/{stats.total_samples}")
     print(f"Collision rate: {stats.collision_rate:.6f}")
+    analyzer.clear_analysis()
 
