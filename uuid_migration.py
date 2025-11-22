@@ -1,5 +1,5 @@
 import uuid
-from typing import Optional, Dict, List, Tuple
+from typing import Optional, Dict, List, Tuple, Callable
 from enum import Enum
 from dataclasses import dataclass
 from datetime import datetime
@@ -122,8 +122,12 @@ class UUIDMigrator:
         return None
 
     def batch_migrate(
-        self, uuids: List[uuid.UUID], migration_func, *args, **kwargs
+        self, uuids: List[uuid.UUID], migration_func: Callable, *args, **kwargs
     ) -> List[MigrationResult]:
+        if not isinstance(uuids, list) or not all(isinstance(u, uuid.UUID) for u in uuids):
+            raise ValueError("uuids must be a list of UUID objects")
+        if not callable(migration_func):
+            raise ValueError("migration_func must be callable")
         results = []
         for u in uuids:
             result = migration_func(u, *args, **kwargs)
