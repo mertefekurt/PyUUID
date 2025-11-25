@@ -26,6 +26,7 @@ class UUIDMigrator:
     def __init__(self):
         self.migration_history: List[MigrationResult] = []
         self.namespace_cache: Dict[str, uuid.UUID] = {}
+        self.custom_migrations: Dict[str, Callable[[uuid.UUID], uuid.UUID]] = {}
 
     def get_namespace(self, namespace_name: str) -> uuid.UUID:
         if namespace_name not in self.namespace_cache:
@@ -158,6 +159,41 @@ class UUIDMigrator:
     def clear_history(self):
         self.migration_history.clear()
         self.namespace_cache.clear()
+        self.custom_migrations.clear()
+
+    def register_custom_migration(self, name: str, handler: Callable[[uuid.UUID], uuid.UUID]):
+        if not isinstance(name, str) or not name:
+            raise ValueError("name must be a non-empty string")
+        if not callable(handler):
+            raise ValueError("handler must be callable")
+        self.custom_migrations[name] = handler
+
+    def migrate_custom(self, source_uuid: uuid.UUID, name: str, **metadata) -> MigrationResult:
+        if name not in self.custom_migrations:
+            raise ValueError("custom migration is not registered")
+        try:
+            target_uuid = self.custom_migrations[name](source_uuid)
+            result = MigrationResult(
+                source_uuid=source_uuid,
+                target_uuid=target_uuid,
+                migration_type=f"custom:{name}",
+                success=True,
+                timestamp=datetime.now(),
+                metadata=metadata or {},
+            )
+            self.migration_history.append(result)
+            return result
+        except Exception as e:
+            result = MigrationResult(
+                source_uuid=source_uuid,
+                target_uuid=source_uuid,
+                migration_type=f"custom:{name}",
+                success=False,
+                timestamp=datetime.now(),
+                metadata={"error": str(e), **metadata},
+            )
+            self.migration_history.append(result)
+            return result
 
 
 if __name__ == "__main__":
@@ -168,4 +204,8 @@ if __name__ == "__main__":
     print(f"Success: {result.success}")
     stats = migrator.get_migration_statistics()
     print(f"Statistics: {stats}")
+    migrator.clear_history()
+    migrator.register_custom_migration("noop", lambda u: u)
+    custom_result = migrator.migrate_custom(test_uuid, "noop", description="demo run")
+    print(f"Custom migration success: {custom_result.success}")
 
