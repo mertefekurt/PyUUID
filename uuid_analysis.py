@@ -1,5 +1,6 @@
+import json
 import uuid
-from typing import Dict, List, Set, Tuple
+from typing import Any, Dict, List, Set, Tuple
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from statistics import mean, stdev
@@ -196,6 +197,24 @@ class UUIDAnalyzer:
 
     def clear_analysis(self):
         self.analyzed_uuids.clear()
+
+    def get_summary(self) -> Dict[str, Any]:
+        if not self.analyzed_uuids:
+            return {}
+        return {
+            "total": len(self.analyzed_uuids),
+            "version_distribution": self.get_version_distribution(),
+            "variant_distribution": self.get_variant_distribution(),
+            "average_entropy": mean(a.bit_entropy for a in self.analyzed_uuids),
+            "anomalies": [
+                {"uuid": str(uuid_obj), "reason": reason}
+                for uuid_obj, reason in self.detect_anomalies()
+            ],
+        }
+
+    def to_json(self) -> str:
+        summary = self.get_summary()
+        return json.dumps(summary, indent=2) if summary else "{}"
 
 
 if __name__ == "__main__":
