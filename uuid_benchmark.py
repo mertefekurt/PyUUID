@@ -1,8 +1,9 @@
-import uuid
-import time
+import csv
 import statistics
-from typing import Dict, List, Callable
+import time
+import uuid
 from dataclasses import dataclass
+from typing import Callable, Dict, List
 
 
 @dataclass
@@ -151,6 +152,38 @@ class UUIDBenchmark:
 
     def clear_results(self):
         self.results.clear()
+
+    def export_to_csv(self, filepath: str):
+        if not self.results:
+            raise ValueError("No benchmark results available")
+        fieldnames = [
+            "function_name",
+            "iterations",
+            "total_time_ms",
+            "average_time_us",
+            "min_time_us",
+            "max_time_us",
+            "median_time_us",
+            "std_deviation_us",
+            "operations_per_second",
+        ]
+        with open(filepath, "w", newline="") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for result in self.results.values():
+                writer.writerow(
+                    {
+                        "function_name": result.function_name,
+                        "iterations": result.iterations,
+                        "total_time_ms": result.total_time,
+                        "average_time_us": result.average_time,
+                        "min_time_us": result.min_time,
+                        "max_time_us": result.max_time,
+                        "median_time_us": result.median_time,
+                        "std_deviation_us": result.std_deviation,
+                        "operations_per_second": result.operations_per_second,
+                    }
+                )
 
 
 if __name__ == "__main__":
