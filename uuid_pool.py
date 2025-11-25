@@ -195,6 +195,32 @@ class UUIDPool:
         self._running = False
         self.clear()
 
+    def update_capacity(self, new_max_size: int):
+        if not isinstance(new_max_size, int) or new_max_size < self.config.min_size:
+            raise ValueError("new_max_size must be >= min_size")
+        with self.lock:
+            new_queue = Queue(maxsize=new_max_size)
+            evicted = 0
+            try:
+                while not self.pool.empty():
+                    item = self.pool.get_nowait()
+                    if not new_queue.full():
+                        new_queue.put_nowait(item)
+                    else:
+                        evicted += 1
+                        self._uuid_timestamps.pop(str(item), None)
+            except Empty:
+                pass
+            self.pool = new_queue
+            self.config.max_size = new_max_size
+            self.stats.eviction_count += evicted
+            self.stats.current_size = self.pool.qsize()
+
+    def update_refill_threshold(self, threshold: float):
+        if not (0 < threshold <= 1):
+            raise ValueError("threshold must be between 0 and 1")
+        self.config.refill_threshold = threshold
+
 
 class UUIDPoolManager:
     def __init__(self):
