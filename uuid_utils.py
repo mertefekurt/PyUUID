@@ -3,6 +3,7 @@ from typing import Optional
 
 
 def is_valid_uuid(uuid_string: str) -> bool:
+    """Return whether a string can be parsed as a UUID."""
     if not isinstance(uuid_string, str):
         return False
     try:
@@ -47,6 +48,7 @@ def generate_api_key() -> str:
 
 
 def generate_namespace_uuid(namespace: str, name: str) -> uuid.UUID:
+    """Generate a deterministic UUID from a DNS-derived namespace and name."""
     if not isinstance(namespace, str) or not isinstance(name, str):
         raise ValueError("namespace and name must be strings")
     namespace_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, namespace)
@@ -54,6 +56,7 @@ def generate_namespace_uuid(namespace: str, name: str) -> uuid.UUID:
 
 
 def uuid_from_string(uuid_string: str) -> Optional[uuid.UUID]:
+    """Parse a UUID string, returning None when invalid."""
     if not isinstance(uuid_string, str):
         return None
     try:
@@ -63,6 +66,7 @@ def uuid_from_string(uuid_string: str) -> Optional[uuid.UUID]:
 
 
 def uuid_from_bytes(uuid_bytes: bytes) -> Optional[uuid.UUID]:
+    """Parse UUID bytes, returning None when invalid."""
     if not isinstance(uuid_bytes, bytes) or len(uuid_bytes) != 16:
         return None
     try:

@@ -1,14 +1,16 @@
 import json
+import math
 import uuid
-from typing import Any, Dict, List, Set, Tuple
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from statistics import mean, stdev
-import math
+from typing import Any, Dict, List, Tuple
 
 
 @dataclass
 class DistributionStats:
+    """Aggregate collision, entropy, and bit-distribution metrics."""
+
     total_samples: int
     unique_count: int
     collision_count: int
@@ -19,6 +21,8 @@ class DistributionStats:
 
 @dataclass
 class UUIDAnalysis:
+    """Analysis result for a single UUID."""
+
     uuid_obj: uuid.UUID
     version: int
     variant: str
@@ -28,6 +32,8 @@ class UUIDAnalysis:
 
 
 class UUIDAnalyzer:
+    """Analyze UUID entropy, bit patterns, versions, and variants."""
+
     _VARIANT_MAP = {
         uuid.RESERVED_NCS: "reserved_ncs",
         uuid.RFC_4122: "rfc_4122",
@@ -39,6 +45,7 @@ class UUIDAnalyzer:
         self.analyzed_uuids: List[UUIDAnalysis] = []
 
     def analyze_uuid(self, uuid_obj: uuid.UUID) -> UUIDAnalysis:
+        """Analyze one UUID and store the result in the analyzer history."""
         hex_str = uuid_obj.hex
         hex_dist = Counter(hex_str)
         bit_patterns = self._analyze_bit_patterns(uuid_obj)
@@ -57,6 +64,7 @@ class UUIDAnalyzer:
         return analysis
 
     def _analyze_bit_patterns(self, uuid_obj: uuid.UUID) -> Dict[str, int]:
+        """Calculate simple run-length and transition metrics over 128 bits."""
         bits = bin(uuid_obj.int)[2:].zfill(128)
         patterns = {
             "consecutive_zeros": 0,
@@ -91,6 +99,7 @@ class UUIDAnalyzer:
         return patterns
 
     def _calculate_bit_entropy(self, uuid_obj: uuid.UUID) -> float:
+        """Calculate Shannon entropy over the UUID hexadecimal characters."""
         hex_str = uuid_obj.hex
         char_freq = Counter(hex_str)
         entropy = 0.0
@@ -104,6 +113,7 @@ class UUIDAnalyzer:
         return entropy
 
     def analyze_distribution(self, uuids: List[uuid.UUID]) -> DistributionStats:
+        """Analyze UUID collection uniqueness and per-bit distribution."""
         if not isinstance(uuids, list) or not uuids:
             raise ValueError("uuids must be a non-empty list")
         unique_uuids = set()
@@ -117,7 +127,7 @@ class UUIDAnalyzer:
             else:
                 unique_uuids.add(uuid_str)
 
-            analysis = self.analyze_uuid(u)
+            self.analyze_uuid(u)
             for bit_pos in range(128):
                 bit_value = (u.int >> (127 - bit_pos)) & 1
                 bit_distributions[bit_pos].append(bit_value)
@@ -142,6 +152,7 @@ class UUIDAnalyzer:
         )
 
     def detect_anomalies(self, threshold: float = 2.0) -> List[Tuple[uuid.UUID, str]]:
+        """Detect UUIDs whose entropy differs from the observed mean."""
         if len(self.analyzed_uuids) < 10:
             return []
 
@@ -172,6 +183,7 @@ class UUIDAnalyzer:
         return dict(variant_dist)
 
     def generate_report(self) -> str:
+        """Render a text report from the current analysis history."""
         if not self.analyzed_uuids:
             return "No UUIDs analyzed"
 
@@ -199,6 +211,7 @@ class UUIDAnalyzer:
         self.analyzed_uuids.clear()
 
     def get_summary(self) -> Dict[str, Any]:
+        """Return the current analysis summary as structured data."""
         if not self.analyzed_uuids:
             return {}
         return {
@@ -226,4 +239,3 @@ if __name__ == "__main__":
     print(f"Unique: {stats.unique_count}/{stats.total_samples}")
     print(f"Collision rate: {stats.collision_rate:.6f}")
     analyzer.clear_analysis()
-

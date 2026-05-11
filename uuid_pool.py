@@ -1,13 +1,15 @@
 import uuid
 import threading
 import time
-from typing import Optional, List, Dict
 from dataclasses import dataclass
 from queue import Queue, Empty
+from typing import Dict, List, Optional
 
 
 @dataclass
 class PoolConfig:
+    """Configuration values for UUID pool sizing and refill behavior."""
+
     min_size: int = 10
     max_size: int = 1000
     prefill: bool = True
@@ -18,6 +20,8 @@ class PoolConfig:
 
 @dataclass
 class PoolStats:
+    """Runtime counters for a UUID pool."""
+
     current_size: int
     total_generated: int
     total_consumed: int
@@ -28,6 +32,8 @@ class PoolStats:
 
 
 class UUIDPool:
+    """Thread-backed UUID pool for pre-generating UUID values."""
+
     def __init__(self, config: Optional[PoolConfig] = None):
         self.config = config or PoolConfig()
         self.pool: Queue = Queue(maxsize=self.config.max_size)
@@ -50,10 +56,12 @@ class UUIDPool:
         self._start_refill_thread()
 
     def _prefill_pool(self):
+        """Fill the queue to the configured minimum size."""
         for _ in range(self.config.min_size):
             self._generate_and_add()
 
     def _generate_and_add(self) -> bool:
+        """Generate one UUID and enqueue it when capacity allows."""
         try:
             new_uuid = uuid.uuid4()
             uuid_str = str(new_uuid)
@@ -67,6 +75,7 @@ class UUIDPool:
             return False
 
     def _start_refill_thread(self):
+        """Start the background worker that refills and evicts UUIDs."""
         def refill_worker():
             while self._running:
                 try:
@@ -94,6 +103,7 @@ class UUIDPool:
         thread.start()
 
     def _evict_expired(self):
+        """Remove UUIDs that have exceeded the configured TTL."""
         if not self.config.ttl_seconds:
             return
 
@@ -126,6 +136,7 @@ class UUIDPool:
             self.stats.current_size = self.pool.qsize()
 
     def get(self, timeout: Optional[float] = None) -> Optional[uuid.UUID]:
+        """Return one UUID from the pool, or None when no item is available."""
         try:
             uuid_obj = self.pool.get(timeout=timeout)
             uuid_str = str(uuid_obj)
@@ -141,6 +152,7 @@ class UUIDPool:
             return None
 
     def get_batch(self, count: int, timeout: Optional[float] = None) -> List[uuid.UUID]:
+        """Return up to count UUIDs from the pool."""
         if not isinstance(count, int) or count < 1:
             raise ValueError("count must be a positive integer")
         results = []
@@ -153,6 +165,7 @@ class UUIDPool:
         return results
 
     def put(self, uuid_obj: uuid.UUID) -> bool:
+        """Return a UUID to the pool when capacity is available."""
         try:
             if self.pool.qsize() < self.config.max_size:
                 self.pool.put_nowait(uuid_obj)
@@ -165,6 +178,7 @@ class UUIDPool:
             return False
 
     def get_stats(self) -> PoolStats:
+        """Return a snapshot of current pool statistics."""
         with self.lock:
             self.stats.current_size = self.pool.qsize()
             return PoolStats(
@@ -178,10 +192,12 @@ class UUIDPool:
             )
 
     def get_hit_rate(self) -> float:
+        """Return the ratio of successful pool reads to total reads."""
         total_requests = self.stats.cache_hits + self.stats.cache_misses
         return self.stats.cache_hits / total_requests if total_requests > 0 else 0.0
 
     def clear(self):
+        """Empty queued UUIDs and reset the current size counter."""
         while not self.pool.empty():
             try:
                 self.pool.get_nowait()
@@ -192,10 +208,12 @@ class UUIDPool:
             self.stats.current_size = 0
 
     def shutdown(self):
+        """Stop the refill worker and clear queued UUIDs."""
         self._running = False
         self.clear()
 
     def update_capacity(self, new_max_size: int):
+        """Resize the queue capacity while preserving available UUIDs."""
         if not isinstance(new_max_size, int) or new_max_size < self.config.min_size:
             raise ValueError("new_max_size must be >= min_size")
         with self.lock:
@@ -217,29 +235,35 @@ class UUIDPool:
             self.stats.current_size = self.pool.qsize()
 
     def update_refill_threshold(self, threshold: float):
+        """Update the refill threshold ratio."""
         if not (0 < threshold <= 1):
             raise ValueError("threshold must be between 0 and 1")
         self.config.refill_threshold = threshold
 
 
 class UUIDPoolManager:
+    """Manage named UUID pools with shared lifecycle helpers."""
+
     def __init__(self):
         self.pools: Dict[str, UUIDPool] = {}
         self.lock = threading.Lock()
 
     def get_pool(self, name: str, config: Optional[PoolConfig] = None) -> UUIDPool:
+        """Return a named pool, creating it with config when missing."""
         with self.lock:
             if name not in self.pools:
                 self.pools[name] = UUIDPool(config)
             return self.pools[name]
 
     def remove_pool(self, name: str):
+        """Shutdown and remove a named pool."""
         with self.lock:
             if name in self.pools:
                 self.pools[name].shutdown()
                 del self.pools[name]
 
     def get_all_stats(self) -> Dict[str, PoolStats]:
+        """Return statistics for all managed pools."""
         with self.lock:
             return {name: pool.get_stats() for name, pool in self.pools.items()}
 
@@ -256,4 +280,3 @@ if __name__ == "__main__":
     print(f"Pool stats: {stats}")
 
     pool.shutdown()
-

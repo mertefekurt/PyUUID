@@ -8,6 +8,8 @@ from typing import Callable, Dict, List
 
 @dataclass
 class BenchmarkResult:
+    """Measured timing summary for a benchmarked function."""
+
     function_name: str
     iterations: int
     total_time: float
@@ -20,12 +22,15 @@ class BenchmarkResult:
 
 
 class UUIDBenchmark:
+    """Benchmark UUID generation, conversion, and validation helpers."""
+
     def __init__(self):
         self.results: Dict[str, BenchmarkResult] = {}
 
     def measure_function(
         self, func: Callable, iterations: int = 10000, *args, **kwargs
     ) -> BenchmarkResult:
+        """Measure a callable repeatedly and store its timing summary."""
         if not isinstance(iterations, int) or iterations < 1:
             raise ValueError("iterations must be a positive integer")
         times = []
@@ -58,6 +63,7 @@ class UUIDBenchmark:
         return result
 
     def compare_versions(self, iterations: int = 10000) -> Dict[str, BenchmarkResult]:
+        """Benchmark UUID v1, v3, v4, and v5 generation."""
         def generate_v1():
             return uuid.uuid1()
 
@@ -78,6 +84,7 @@ class UUIDBenchmark:
         return results
 
     def benchmark_conversions(self, iterations: int = 10000) -> Dict[str, BenchmarkResult]:
+        """Benchmark common UUID conversions to and from primitive formats."""
         test_uuid = uuid.uuid4()
 
         def to_string():
@@ -106,6 +113,7 @@ class UUIDBenchmark:
         return results
 
     def benchmark_validation(self, iterations: int = 10000) -> Dict[str, BenchmarkResult]:
+        """Benchmark parsing valid and invalid UUID strings."""
         valid_uuid_str = str(uuid.uuid4())
         invalid_uuid_str = "not-a-uuid"
 
@@ -131,6 +139,7 @@ class UUIDBenchmark:
         return results
 
     def get_comparison_report(self) -> str:
+        """Render benchmark results sorted by average runtime."""
         if not self.results:
             return "No benchmark results available"
 
@@ -154,6 +163,7 @@ class UUIDBenchmark:
         self.results.clear()
 
     def export_to_csv(self, filepath: str):
+        """Write stored benchmark results to a CSV file."""
         if not self.results:
             raise ValueError("No benchmark results available")
         fieldnames = [
@@ -193,4 +203,3 @@ if __name__ == "__main__":
     print("\nBenchmarking UUID conversions...")
     conversion_results = benchmark.benchmark_conversions(iterations=50000)
     print("\n" + benchmark.get_comparison_report())
-

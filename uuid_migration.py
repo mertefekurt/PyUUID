@@ -1,8 +1,8 @@
 import uuid
-from typing import Optional, Dict, List, Tuple, Callable
-from enum import Enum
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
+from typing import Callable, Dict, List, Optional
 
 
 class UUIDVersion(Enum):
@@ -14,6 +14,8 @@ class UUIDVersion(Enum):
 
 @dataclass
 class MigrationResult:
+    """Record the result and metadata for one UUID migration attempt."""
+
     source_uuid: uuid.UUID
     target_uuid: uuid.UUID
     migration_type: str
@@ -23,12 +25,15 @@ class MigrationResult:
 
 
 class UUIDMigrator:
+    """Convert UUID identities between supported strategies and track history."""
+
     def __init__(self):
         self.migration_history: List[MigrationResult] = []
         self.namespace_cache: Dict[str, uuid.UUID] = {}
         self.custom_migrations: Dict[str, Callable[[uuid.UUID], uuid.UUID]] = {}
 
     def get_namespace(self, namespace_name: str) -> uuid.UUID:
+        """Return a cached UUID namespace for a namespace name."""
         if namespace_name not in self.namespace_cache:
             self.namespace_cache[namespace_name] = uuid.uuid5(
                 uuid.NAMESPACE_DNS, namespace_name
@@ -38,6 +43,7 @@ class UUIDMigrator:
     def migrate_v4_to_v5(
         self, source_uuid: uuid.UUID, namespace: str, name: str
     ) -> MigrationResult:
+        """Create a deterministic v5 UUID from a source UUID context."""
         if not isinstance(namespace, str) or not isinstance(name, str):
             return MigrationResult(
                 source_uuid=source_uuid,
@@ -73,6 +79,7 @@ class UUIDMigrator:
     def migrate_v5_to_v3(
         self, source_uuid: uuid.UUID, namespace: str, name: str
     ) -> MigrationResult:
+        """Create a deterministic v3 UUID from a source UUID context."""
         if not isinstance(namespace, str) or not isinstance(name, str):
             return MigrationResult(
                 source_uuid=source_uuid,
@@ -108,6 +115,7 @@ class UUIDMigrator:
     def preserve_identity_migration(
         self, source_uuid: uuid.UUID, target_version: UUIDVersion
     ) -> Optional[MigrationResult]:
+        """Create a new UUID when the requested target version is supported."""
         if target_version == UUIDVersion.V4:
             new_uuid = uuid.uuid4()
             result = MigrationResult(
@@ -125,6 +133,7 @@ class UUIDMigrator:
     def batch_migrate(
         self, uuids: List[uuid.UUID], migration_func: Callable, *args, **kwargs
     ) -> List[MigrationResult]:
+        """Apply a migration callable across a list of UUID objects."""
         if not isinstance(uuids, list) or not all(isinstance(u, uuid.UUID) for u in uuids):
             raise ValueError("uuids must be a list of UUID objects")
         if not callable(migration_func):
@@ -136,6 +145,7 @@ class UUIDMigrator:
         return results
 
     def get_migration_statistics(self) -> Dict:
+        """Summarize success and failure counts for migration history."""
         total = len(self.migration_history)
         successful = sum(1 for r in self.migration_history if r.success)
         failed = total - successful
@@ -162,6 +172,7 @@ class UUIDMigrator:
         self.custom_migrations.clear()
 
     def register_custom_migration(self, name: str, handler: Callable[[uuid.UUID], uuid.UUID]):
+        """Register a named custom migration handler."""
         if not isinstance(name, str) or not name:
             raise ValueError("name must be a non-empty string")
         if not callable(handler):
@@ -169,6 +180,7 @@ class UUIDMigrator:
         self.custom_migrations[name] = handler
 
     def migrate_custom(self, source_uuid: uuid.UUID, name: str, **metadata) -> MigrationResult:
+        """Run a registered custom migration and capture its result."""
         if name not in self.custom_migrations:
             raise ValueError("custom migration is not registered")
         try:
@@ -208,4 +220,3 @@ if __name__ == "__main__":
     migrator.register_custom_migration("noop", lambda u: u)
     custom_result = migrator.migrate_custom(test_uuid, "noop", description="demo run")
     print(f"Custom migration success: {custom_result.success}")
-
