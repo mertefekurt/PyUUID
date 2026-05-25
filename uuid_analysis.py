@@ -1,3 +1,4 @@
+"""Core utilities for this package."""
 import json
 import math
 import uuid
