@@ -1,25 +1,32 @@
 # PyUUID
 
-UUID helper experiments for Python: validation, parsing, short IDs, namespace IDs, token helpers, pools, migration notes, and benchmarks.
+| Detail | Value |
+| --- | --- |
+| Area | desktop lab |
+| Entry | `PyUUID` |
+| Input | small local input |
+| Output | readable terminal output |
 
 ![PyUUID cover](assets/readme-cover.svg)
 
-## Run a few pieces
+UUID helper experiments, pools, and benchmarks.
+
+## Run it locally
 
 ```bash
 git clone https://github.com/mertefekurt/PyUUID.git
 cd PyUUID
-python uuid_utils.py
-python uuid_benchmark.py
-python uuid_analysis.py
+PyUUID
 ```
 
-## Files
+## Working map
 
-```text
-uuid_utils.py      core helpers
-uuid_pool.py       pre-generated pool experiment
-uuid_benchmark.py  timing comparison
-uuid_analysis.py   analysis notes
-uuid_migration.py  migration helpers
-```
+![Workflow diagram](assets/readme-diagram.svg)
+
+## Useful edges
+
+A few choices worth keeping in mind:
+
+- Designed as a focused desktop lab repo.
+- Keeps setup short.
+- Prioritizes readable output over infrastructure.
